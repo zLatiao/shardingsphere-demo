@@ -1,11 +1,14 @@
 package cn.zzz.demo.model.entity;
 
+import cn.zzz.demo.util.OrderNumberGenerator;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @TableName("fee")
 @Data
@@ -60,4 +63,6 @@ public class Fee {
      * 乐观锁
      */
     private Integer version;
+    
+
 }

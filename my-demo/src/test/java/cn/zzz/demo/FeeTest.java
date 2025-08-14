@@ -1,5 +1,4 @@
 package cn.zzz.demo;
-
 import cn.zzz.demo.mapper.FeeMapper;
 import cn.zzz.demo.model.entity.Fee;
 import cn.zzz.demo.util.OrderNumberGenerator;
@@ -22,12 +21,8 @@ public class FeeTest {
 
     @Test
     public void test() {
-        Fee entity = new Fee();
-        entity.setOrderNumber(UUID.randomUUID().toString());
-        entity.setOrderTime(LocalDateTime.now());
-        feeMapper.insert(entity);
-//        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yymm"));
-
+        Fee fee = createTestFee(LocalDateTime.now());
+        feeMapper.insert(fee);
     }
 
     @Test
@@ -39,11 +34,9 @@ public class FeeTest {
         List<Fee> list = new ArrayList<>();
 
         while (currDate.isBefore(endDate)) {
-            Fee entity = new Fee();
-            entity.setOrderNumber(OrderNumberGenerator.generateOrderNumber(currDate));
-            entity.setOrderTime(LocalDateTime.of(currDate, LocalTime.MIN));
-            list.add(entity);
-            currDate = currDate.plusMonths(1);
+            Fee fee = createTestFee(LocalDateTime.of(currDate, LocalTime.MIN));
+            list.add(fee);
+            currDate = currDate.plusWeeks(2);
         }
 
         feeMapper.insert(list);
@@ -52,12 +45,11 @@ public class FeeTest {
 
     @Test
     public void selectByOrderNumber() {
-        Fee fee = feeMapper.selectOne(Wrappers.<Fee>lambdaQuery().eq(Fee::getOrderNumber, "NO25012000000000000001"));
+        Fee fee = feeMapper.selectOne(Wrappers.<Fee>lambdaQuery().eq(Fee::getOrderNumber, "NO2025010de8be50-5cc4-4120-99ed-60b87eca77e6"));
     }
-
     @Test
     public void selectByOrderNumbers() {
-        List<Fee> fees = feeMapper.selectList(Wrappers.<Fee>lambdaQuery().in(Fee::getOrderNumber, "NO250800f72211-3674-49a3-b400-6dc4c8e3a5e4", "NO25052ad885c2-4e73-40f3-89df-48dd7cfda2a2"));
+        List<Fee> fees = feeMapper.selectList(Wrappers.<Fee>lambdaQuery().in(Fee::getOrderNumber, "NO2025010de8be50-5cc4-4120-99ed-60b87eca77e6", "NO202512e1e52219-875b-4870-a194-45433447f3c8"));
         System.out.println();
     }
 
@@ -65,5 +57,12 @@ public class FeeTest {
     public void selectByGTOrderTime() {
         List<Fee> fees = feeMapper.selectList(Wrappers.<Fee>lambdaQuery().ge(Fee::getOrderTime, LocalDateTime.of(2025, 1, 1, 0, 0, 0)));
         System.out.println();
+    }
+
+    Fee createTestFee(LocalDateTime time) {
+        Fee fee = new Fee();
+        fee.setOrderNumber(OrderNumberGenerator.generateOrderNumber(time));
+        fee.setOrderTime(time);
+        return fee;
     }
 }

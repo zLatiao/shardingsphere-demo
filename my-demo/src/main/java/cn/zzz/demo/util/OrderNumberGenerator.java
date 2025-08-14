@@ -7,14 +7,14 @@ import java.util.UUID;
 
 public class OrderNumberGenerator {
     public static String generateOrderNumber(LocalDateTime time) {
-        return "NO" + time.format(DateTimeFormatter.ofPattern("yyMM")) + UUID.randomUUID();
+        return "NO" + time.format(DateTimeFormatter.ofPattern("yyyyMM")) + UUID.randomUUID();
     }
 
     public static String generateOrderNumber(LocalDate date) {
-        return "NO" + date.format(DateTimeFormatter.ofPattern("yyMM")) + UUID.randomUUID();
+        return "NO" + date.format(DateTimeFormatter.ofPattern("yyyyMM")) + UUID.randomUUID();
     }
 
-    public static String getYYMMFromOrderNumber(String orderNumber) {
-        return orderNumber.substring(2, 6);
+    public static String getYYYYMMFromOrderNumber(String orderNumber) {
+        return orderNumber.substring(2, 8);
     }
 }
