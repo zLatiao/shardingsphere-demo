@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: my-demo
+#  datasource:
+#    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+#    url: jdbc:shardingsphere:classpath:sharding.yaml
+  shardingsphere:
+    mode:
+      type: Standalone
+      repository:
+        type: JDBC
+    props:
+      sql-show: true
+    # DataSource Config
+    datasource:
+      names: ds
+      ds:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://rm-wz9c69cvtg4v06q35xo.mysql.rds.aliyuncs.com/shardingsphere-db # 包年
+        username: trip
+        password: u3b2Ug95
+    rules:
+      sharding:
+        tables:
+          fee:
+            # fee_yyMM: fee_2401,fee_2402,fee_2501
+            actual-data-nodes: ds.fee_${25..26}0${1..9},ds.fee_${25..26}${10..12}
+            table-strategy:
+              complex:
+                sharding-columns: order_time,order_number
+                sharding-algorithm-name: fee-order_time
+        sharding-algorithms:
+          fee-order_time:
+            # 根据分片键 分片
+            type: CLASS_BASED
+            # 分片算法
+            props:
+              algorithmClassName: cn.zzz.demo.config.ShardingAlgorithm
+              strategy: complex
+
