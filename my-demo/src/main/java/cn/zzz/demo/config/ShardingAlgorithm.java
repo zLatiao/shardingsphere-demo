@@ -22,8 +22,7 @@ public class ShardingAlgorithm implements ComplexKeysShardingAlgorithm<Comparabl
     private Properties props;
 
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
-    private final String logicTableName = "fee";
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
 
     /**
      * 复杂分片
@@ -98,7 +97,7 @@ public class ShardingAlgorithm implements ComplexKeysShardingAlgorithm<Comparabl
     }
 
     private String getTableName(String yearMonth) {
-        return logicTableName + "_" + yearMonth;
+        return props.getProperty("logicTableName") + "_" + yearMonth;
     }
 
     @Override

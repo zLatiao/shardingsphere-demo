@@ -7,40 +7,39 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@TableName("fee")
+@TableName("fee_item")
 @Data
-public class Fee {
+public class FeeItem {
     /**
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
-
     /**
-     * 订单号
+     * 订单号（分片键）
      */
     private String orderNumber;
 
     /**
-     * 订单时间
+     * 订单时间（分片键）
      */
     private LocalDateTime orderTime;
 
     /**
-     * 订单名称
+     * 费用类型（如：运费、税费、优惠等）
      */
-    private String orderName;
+    private String type;
 
     /**
-     * 费用数量
+     * 费用项目名称
      */
-    private Integer feeCnt;
+    private String name;
 
     /**
-     * 总费用
+     * 费用金额
      */
-    private BigDecimal feeSum;
+    private BigDecimal amount;
 
     /**
      * 创建时间
@@ -66,6 +65,4 @@ public class Fee {
      * 乐观锁
      */
     private Integer version;
-    
-
 }

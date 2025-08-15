@@ -22,6 +22,7 @@ spring:
         password: u3b2Ug95
     rules:
       sharding:
+        # 分片的表
         tables:
           fee:
             # fee_yyMM: fee_2401,fee_2402,fee_2501
@@ -35,6 +36,15 @@ spring:
 #              standard:
 #                sharding-column: order_number
 #                sharding-algorithm-name: fee-inline
+          fee_item:
+            # fee_yyMM: fee_2401,fee_2402,fee_2501
+            actual-data-nodes: ds.fee_item_${2025..2025}0${1..9},ds.fee_item_${2025..2025}${10..12}
+            table-strategy:
+              # 复杂分片策略
+              complex:
+                sharding-columns: order_time,order_number
+                sharding-algorithm-name: fee_item-complex
+        # 分片算法
         sharding-algorithms:
           fee-complex:
             # 根据分片键 分片
@@ -43,8 +53,22 @@ spring:
             props:
               algorithmClassName: cn.zzz.demo.config.ShardingAlgorithm
               strategy: complex
+              # 自定义属性：逻辑表名
+              logicTableName: fee
+          fee_item-complex:
+            # 根据分片键 分片
+            type: CLASS_BASED
+            # 分片算法
+            props:
+              algorithmClassName: cn.zzz.demo.config.ShardingAlgorithm
+              strategy: complex
+              # 自定义属性：逻辑表名
+              logicTableName: fee_item
           fee-inline:
             type: INLINE
             props:
               algorithm-expression: fee_$->{order_number.substring(2,8)}
-
+        # 绑定表配置，用分片键关联的时候就不会笛卡尔积join
+        binding-tables:
+          # 绑定fee和fee_item
+          - fee,fee_item
