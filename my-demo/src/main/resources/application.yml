@@ -25,17 +25,26 @@ spring:
         tables:
           fee:
             # fee_yyMM: fee_2401,fee_2402,fee_2501
-            actual-data-nodes: ds.fee_${2025..2026}0${1..9},ds.fee_${2025..2026}${10..12}
+            actual-data-nodes: ds.fee_${2025..2025}0${1..9},ds.fee_${2025..2025}${10..12}
             table-strategy:
+              # 复杂分片策略
               complex:
                 sharding-columns: order_time,order_number
-                sharding-algorithm-name: fee-order_time
+                sharding-algorithm-name: fee-complex
+              # 默认分片策略：解析order_number的年月
+#              standard:
+#                sharding-column: order_number
+#                sharding-algorithm-name: fee-inline
         sharding-algorithms:
-          fee-order_time:
+          fee-complex:
             # 根据分片键 分片
             type: CLASS_BASED
             # 分片算法
             props:
               algorithmClassName: cn.zzz.demo.config.ShardingAlgorithm
               strategy: complex
+          fee-inline:
+            type: INLINE
+            props:
+              algorithm-expression: fee_$->{order_number.substring(2,8)}
 
